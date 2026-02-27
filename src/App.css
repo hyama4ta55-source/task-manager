@@ -311,3 +311,81 @@ body {
 .btn-clear:hover {
   background: #fff5f5;
 }
+
+/* =====================
+   スマホ対応 (〜520px)
+   ===================== */
+@media (max-width: 520px) {
+  body {
+    align-items: flex-start;
+  }
+
+  .app {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .card {
+    border-radius: 0;
+    padding: 1.25rem 1rem;
+    min-height: 100vh;
+    box-shadow: none;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  /* 入力欄を縦並びに */
+  .input-row {
+    flex-direction: column;
+  }
+
+  .input-date {
+    width: 100%;
+  }
+
+  .btn-add {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  /* タスク行: テキストが折り返す場合に上揃え */
+  .task-item {
+    align-items: flex-start;
+    padding: 0.75rem 0.75rem;
+  }
+
+  .check-btn {
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* タッチしやすいボタンサイズ */
+  .btn-delete,
+  .btn-edit {
+    padding: 0.5rem 0.6rem;
+    font-size: 1rem;
+  }
+
+  /* 編集エリアを縦並びに */
+  .edit-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .edit-input {
+    width: 100%;
+  }
+
+  .btn-save {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-cancel {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
