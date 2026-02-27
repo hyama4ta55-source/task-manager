@@ -8,6 +8,10 @@ function App() {
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [dueDate, setDueDate] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [editText, setEditText] = useState('')
+  const [editDueDate, setEditDueDate] = useState('')
 
   // 初回読み込み
   useEffect(() => {
@@ -34,12 +38,13 @@ function App() {
     if (!trimmed) return
     const { data, error } = await supabase
       .from('tasks')
-      .insert({ text: trimmed, completed: false })
+      .insert({ text: trimmed, completed: false, due_date: dueDate || null })
       .select()
       .single()
     if (!error) {
       setTasks((prev) => [...prev, data])
       setInputValue('')
+      setDueDate('')
     }
   }
 
@@ -70,8 +75,30 @@ function App() {
     }
   }
 
+  const updateTask = async (id, text, dueDate) => {
+    const trimmed = text.trim()
+    if (!trimmed) return
+    const { error } = await supabase
+      .from('tasks')
+      .update({ text: trimmed, due_date: dueDate || null })
+      .eq('id', id)
+    if (!error) {
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, text: trimmed, due_date: dueDate || null } : t
+        )
+      )
+      setEditingId(null)
+    }
+  }
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') addTask()
+  }
+
+  const isOverdue = (dueDate) => {
+    if (!dueDate) return false
+    return new Date(dueDate) < new Date(new Date().toDateString())
   }
 
   const filteredTasks = tasks.filter((task) => {
@@ -99,6 +126,13 @@ function App() {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
+            disabled={loading}
+          />
+          <input
+            className="input input-date"
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
             disabled={loading}
           />
           <button className="btn btn-add" onClick={addTask} disabled={loading}>
@@ -134,14 +168,72 @@ function App() {
               >
                 {task.completed ? '✓' : ''}
               </button>
-              <span className="task-text">{task.text}</span>
-              <button
-                className="btn btn-delete"
-                onClick={() => deleteTask(task.id)}
-                aria-label="削除"
-              >
-                ✕
-              </button>
+
+              {editingId === task.id ? (
+                <div className="edit-area">
+                  <input
+                    className="input edit-input"
+                    type="text"
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') updateTask(task.id, editText, editDueDate)
+                      if (e.key === 'Escape') setEditingId(null)
+                    }}
+                    autoFocus
+                  />
+                  <input
+                    className="input input-date"
+                    type="date"
+                    value={editDueDate}
+                    onChange={(e) => setEditDueDate(e.target.value)}
+                  />
+                  <button
+                    className="btn btn-save"
+                    onClick={() => updateTask(task.id, editText, editDueDate)}
+                  >
+                    保存
+                  </button>
+                  <button
+                    className="btn btn-cancel"
+                    onClick={() => setEditingId(null)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <div className="task-body">
+                  <span className="task-text">{task.text}</span>
+                  {task.due_date && (
+                    <span className={`due-date ${isOverdue(task.due_date) ? 'overdue' : ''}`}>
+                      期限: {task.due_date}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {editingId !== task.id && (
+                <>
+                  <button
+                    className="btn btn-edit"
+                    onClick={() => {
+                      setEditingId(task.id)
+                      setEditText(task.text)
+                      setEditDueDate(task.due_date ?? '')
+                    }}
+                    aria-label="編集"
+                  >
+                    ✎
+                  </button>
+                  <button
+                    className="btn btn-delete"
+                    onClick={() => deleteTask(task.id)}
+                    aria-label="削除"
+                  >
+                    ✕
+                  </button>
+                </>
+              )}
             </li>
           ))}
         </ul>

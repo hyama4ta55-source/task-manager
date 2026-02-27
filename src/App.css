@@ -210,6 +210,90 @@ body {
   font-size: 0.95rem;
 }
 
+/* Date input */
+.input-date {
+  width: 140px;
+  flex: none;
+  padding: 0.65rem 0.5rem;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+/* Edit button */
+.btn-edit {
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  color: #cbd5e0;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.btn-edit:hover {
+  color: #667eea;
+  background: #ebf4ff;
+}
+
+/* Save / Cancel buttons */
+.btn-save {
+  padding: 0.25rem 0.6rem;
+  background: #667eea;
+  color: white;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.btn-save:hover {
+  opacity: 0.88;
+}
+
+.btn-cancel {
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  color: #a0aec0;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.btn-cancel:hover {
+  color: #fc8181;
+}
+
+/* Edit area layout */
+.edit-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.edit-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.95rem;
+}
+
+/* Task body */
+.task-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+/* Due date badge */
+.due-date {
+  font-size: 0.75rem;
+  color: #718096;
+}
+
+.due-date.overdue {
+  color: #e53e3e;
+  font-weight: 600;
+}
+
 /* Footer */
 .footer {
   margin-top: 1rem;
